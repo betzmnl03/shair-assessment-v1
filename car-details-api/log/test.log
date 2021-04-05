@@ -1,0 +1,24 @@
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+Started POST "/api/details" for 127.0.0.1 at 2021-04-04 20:37:59 -0700
+Processing by DetailsController#index as HTML
+  Parameters: {"vin"=>"", "manufacturer"=>"0"}
+Completed 200 OK in 491ms (Views: 6.3ms | ActiveRecord: 0.0ms | Allocations: 12480)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+Started POST "/api/details" for 127.0.0.1 at 2021-04-04 20:37:59 -0700
+Processing by DetailsController#index as HTML
+  Parameters: {"vin"=>"", "manufacturer"=>"958"}
+Completed 200 OK in 393ms (Views: 0.3ms | ActiveRecord: 0.0ms | Allocations: 3157)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+Started POST "/api/details" for 127.0.0.1 at 2021-04-04 20:38:00 -0700
+Processing by DetailsController#index as HTML
+  Parameters: {"vin"=>"5N1AN0NU4AC575036", "manufacturer"=>"958"}
+Completed 200 OK in 1018ms (Views: 1.7ms | ActiveRecord: 0.0ms | Allocations: 4751)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[31mROLLBACK[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mBEGIN[0m
+Started POST "/api/details" for 127.0.0.1 at 2021-04-04 20:38:01 -0700
+Processing by DetailsController#index as HTML
+  Parameters: {"vin"=>"", "manufacturer"=>""}
+Completed 422 Unprocessable Entity in 281ms (Views: 0.2ms | ActiveRecord: 0.0ms | Allocations: 3214)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[31mROLLBACK[0m
