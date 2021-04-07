@@ -1,9 +1,13 @@
-import React, { useState} from 'react'
+import React, { useState,useEffect} from 'react'
 import { Form, Select} from 'semantic-ui-react'
 import {Details} from "../requests"
 import VinDetailsSection from "./VinDetailsSection"
 import ManDetailsSection from "./ManDetailsSection"
 import AllManDetailsSection from "./AllManDetailsSection"
+import IntroSection from './IntroSection'
+import {Grid, Image} from "semantic-ui-react"
+
+
 const SearchBar = (props)=>{
   const [vin, setVin] = useState("")
   const [vinDetails,setVinDetails] = useState(undefined)
@@ -12,6 +16,26 @@ const SearchBar = (props)=>{
   const [manufacturer, setManufacturer] = useState("")
   const [result, setResult] = useState("")
 
+  useEffect(() => {
+    let payment=document.getElementById("payment-menu")
+    payment.classList.remove("active")
+
+    let home=document.getElementById("home-menu")
+    home.classList.add("active")
+ }, [])
+
+
+
+  function validateVin(vin) {
+    let re = new RegExp("^[A-HJ-NPR-Z\\d]{8}[\\dX][A-HJ-NPR-Z\\d]{2}\\d{6}$");
+    return vin.match(re);
+  }
+
+  function reset(){
+    setAllManDetails(undefined)
+    setVinDetails(undefined)
+    setManDetails(undefined)
+  }
  const handleSubmit = (event) => {   
     const params={
         vin: vin,
@@ -19,13 +43,19 @@ const SearchBar = (props)=>{
     }
     if(vin==="" && manufacturer ===""){
       setResult("Please enter a VIN or select Manufacturer")
+      reset()
+    }
+    else if(vin!==""&&!validateVin(vin)){
+      setResult("Not a valid VIN")
+      reset()
     }
     else{
     Details.index(params)
     .then((res)=>{
-      console.log(res)
+      
       if(res.Results[0]["ErrorCode"] && res.Results[0]["ErrorCode"]!=="0"){
-        setResult(res.Results[0]["ErrorText"])
+        setResult("Not a valid VIN")
+        reset()
       }
       else{
         
@@ -49,10 +79,8 @@ const SearchBar = (props)=>{
   }
   }
 
-  function validateVin(vin) {
-    let re = new RegExp("^[A-HJ-NPR-Z\\d]{8}[\\dX][A-HJ-NPR-Z\\d]{2}\\d{6}$");
-    return vin.match(re);
-  }
+
+
 
   const handleChange =(e,{value})=>{
     if(value){
@@ -82,42 +110,53 @@ const SearchBar = (props)=>{
   }
 
   const handleVinChange=(event)=>{
-    let temp=event.target.value
-    if(!validateVin(temp)){
-      setResult("Not a valid VIN")
-    }
-    else{
-      setResult("")
-    }
-    setVin(temp)
+   setVin(event.target.value)
   }
   
     return (
       
       <>
-      <Form onSubmit={event=>handleSubmit(event)}>
-        <Form.Group widths='equal'>
-          <Form.Input fluid label='Seaech by VIN' name="vin" id="vin" placeholder='Enter the VIN number' onClick={(event)=>handleVinClick(event)} value={vin} onChange={(event)=>handleVinChange(event)}/>         
-          <span> OR </span>
-          <Form.Select
-            search
-            clearable
-            label='Search by Manufacturer'
-            options={props.manuArr.map(item => ({
-              name: item.value,
-              key: item.key,
-              id:item["id"],
-              value: item.value,
-              text: item.text
-            }))}
-            placeholder='Select Manufacturer'
-            onChange={handleChange}
-            onClick={handleManufacturerClick}
-          />
-        </Form.Group>
-        <Form.Button>Search</Form.Button>
-      </Form>
-      <div>{result}</div>
+      <IntroSection/>
+      <Grid centered columns={2} id="search-tab">
+          <Grid.Row centered columns={4}>
+          <Form onSubmit={event=>handleSubmit(event)} id="search-form" className="search-sec">
+            <Form.Group widths="equal">
+              <Form.Input 
+              color="black"
+              label='Search by VIN' name="vin" id="vin" placeholder='Enter the VIN number' value={vin} onChange={(event)=>handleVinChange(event)} onClick={handleVinClick}  style={{
+                width:"50%"
+              }}/>         
+              <span className="or"> OR </span>
+              <Form.Select
+                search
+                clearable
+                pointing='down'
+                label='Search by Manufacturer'
+                options={props.manuArr.map(item => ({
+                  name: item.value,
+                  key: item.key,
+                  id:item["id"],
+                  value: item.value,
+                  text: item.text
+                }))}
+                placeholder='Select Manufacturer'
+                onChange={handleChange}
+                onClick={handleManufacturerClick}
+                style={{
+                  width:"50%"
+                }}
+              />
+            </Form.Group>
+            <Form.Button
+            onClick={(event)=>handleSubmit(event)} 
+            >Search</Form.Button>
+          </Form>
+          </Grid.Row>
+
+
+        </Grid>
+      
+      <div id="error">{result}</div>
       {vinDetails?
       <VinDetailsSection vinDetails={vinDetails}/>
     :""}

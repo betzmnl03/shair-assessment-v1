@@ -1,7 +1,14 @@
 import './App.css';
+import {
+  BrowserRouter,
+  Route,
+  Switch
+} from "react-router-dom"
 import {useState, useEffect} from "react"
 import SearchBar from './components/SearchBar';
 import { Details } from './requests';
+import CreditCardForm from './components/CreditCardForm';
+import Menu from "./components/Menu"
 
 
 function App() {
@@ -14,6 +21,7 @@ function App() {
     }
     Details.index(params)
     .then((res)=>{
+      console.log(res)
       final[0]={
         "key":"0",
         "text":"All",
@@ -47,7 +55,15 @@ function App() {
   return (
   
     <div className="App">    
-       <SearchBar manuArr={manuArr}/>
+        <BrowserRouter>
+        <Menu/>
+        <Switch>
+          <Route path='/' exact render={(routeProps)=><SearchBar manuArr={manuArr} {...routeProps}/>} />
+          <Route path='/payment' render={(routeProps)=><CreditCardForm manuArr={manuArr} {...routeProps}/>} />
+        </Switch>
+        </BrowserRouter>
+
+       
     </div>
   );
 }
