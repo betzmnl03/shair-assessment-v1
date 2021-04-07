@@ -22,6 +22,7 @@ const checkSupported=(value,type)=> {
       }
     return accepted;
 }
+
 /*Luhns algorithm to check whether the card number is valid*/
 const validateCard = value=> {
     let sum = 0;
@@ -211,6 +212,7 @@ export default function CreditCardForm() {
     else the setError messages continue to be displayed
     */
     const handleSubmit =(event)=>{ 
+        event.preventDefault();
     if(validateCardType()&&validateCardNum()&&validateCvv()&&validateExpiry()&&validateCode()){
         setCardNum(undefined)
         setCardType(undefined)

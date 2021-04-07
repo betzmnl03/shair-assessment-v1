@@ -97,7 +97,7 @@ describe('Payment Form', () => {
     });
     browser.close();
   }, 9000000);
-  /*Test3 button should remain disabled if cardType is not selected
+  /*Test3 error is present if cardType is not selected
   inputs: 
   1.Name =>valid
   2.CardType => not selected
@@ -142,7 +142,7 @@ describe('Payment Form', () => {
   browser.close();
 }, 9000000);
 
-/*Test4 button should remain disabled if cardNum is invalid
+/*Test4 error class is present  if cardNum is invalid
   inputs: 
   1.Name =>valid
   2.CardType => Visa
@@ -187,7 +187,7 @@ describe('Payment Form', () => {
   browser.close();
 }, 9000000);
 
-/*Test5 button should remain disabled if cardCvv is invalid
+/*Test5 error class is present  if  cardCvv is invalid
   inputs: 
   1.Name =>valid
   2.CardType => Visa
@@ -232,7 +232,7 @@ describe('Payment Form', () => {
 }, 9000000);
 
 
-/*Test6 button should remain disabled if Expiry date is invalid
+/*Test6 error class is present  if Expiry date is invalid
   inputs: 
   1.Name =>valid
   2.CardType => Visa
@@ -279,7 +279,7 @@ describe('Payment Form', () => {
 }, 9000000);
 
 
-/*Test7 button should remain disabled if Expiry date is invalid
+/*Test7 error class is present  if Expiry date is invalid
   inputs: 
   1.Name =>valid
   2.CardType => Visa

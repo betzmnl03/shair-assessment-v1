@@ -10,7 +10,6 @@ export default function VinDetailsPage(props) {
         let name=details["Manufacturer"]&&details["Manufacturer"].split(" ")
         if(name[0].toLowerCase()===image["name"]){
             src=image["src"]
-            
         }
     })
     return (   
