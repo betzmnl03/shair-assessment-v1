@@ -7,8 +7,6 @@ export default function VinDetailsPage(props) {
     let src=""
     images.forEach((image)=>{
         let name=details["Manufacturer"]&&details["Manufacturer"].split(" ")
-
-        console.log(name)
         if(name[0].toLowerCase()===image["name"]){
             src=image["src"]
             

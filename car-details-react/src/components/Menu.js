@@ -6,10 +6,8 @@ export default class MenuExampleSecondaryPointing extends Component {
   state = { activeItem: 'home' }
 
   handleItemClick = (e, { name }) =>{
-    console.log("here")
     return( this.setState(
       { activeItem: name }
-      
       )
       )
     }

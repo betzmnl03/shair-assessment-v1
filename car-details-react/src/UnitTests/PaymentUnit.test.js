@@ -17,7 +17,7 @@ const invalidCode = "V8W4A"
 
 describe('Payment Form', () => {
 
-  /*Test 1: Submit form with all valid details => Happy Path 😃 */
+  /*Test 1: Submit form with all valid details */
   
   test('Can submit payment form with all valid details', async () => {
     let browser = await puppeteer.launch({
@@ -44,6 +44,12 @@ describe('Payment Form', () => {
     await page.click("button")
     let error= await page.$(".error.required.field");
     expect(await error).toBe(null)
+    await page.waitForTimeout(1000)
+    await page.screenshot({
+      path: "./screenshots/PaymentUnit/screenshot1.jpg",
+      type: "jpeg",
+      fullPage: true
+    });
 
     browser.close();
   }, 9000000);
@@ -83,6 +89,12 @@ describe('Payment Form', () => {
     await page.click("button")
     let error= await page.$(".error.required.field")!==null
     expect(await error).toBe(true)
+    await page.waitForTimeout(1000)
+    await page.screenshot({
+      path: "./screenshots/PaymentUnit/screenshot2.jpg",
+      type: "jpeg",
+      fullPage: true
+    });
     browser.close();
   }, 9000000);
   /*Test3 button should remain disabled if cardType is not selected
@@ -119,6 +131,12 @@ describe('Payment Form', () => {
   await page.click("button")
   let error= await page.$(".error.required.field")!==null
   expect(await error).toBe(true)
+  await page.waitForTimeout(1000)
+  await page.screenshot({
+    path: "./screenshots/PaymentUnit/screenshot3.jpg",
+    type: "jpeg",
+    fullPage: true
+  });
 
  
   browser.close();
@@ -159,6 +177,12 @@ describe('Payment Form', () => {
   await page.click("button")
   let error= await page.$(".error.required.field")!==null
   expect(await error).toBe(true)
+  await page.waitForTimeout(1000)
+  await page.screenshot({
+    path: "./screenshots/PaymentUnit/screenshot4.jpg",
+    type: "jpeg",
+    fullPage: true
+  });
  
   browser.close();
 }, 9000000);
@@ -198,6 +222,12 @@ describe('Payment Form', () => {
   let error= await page.$(".error.required.field")!==null
   expect(await error).toBe(true)
  
+  await page.waitForTimeout(1000)
+  await page.screenshot({
+    path: "./screenshots/PaymentUnit/screenshot5.jpg",
+    type: "jpeg",
+    fullPage: true
+  });
   browser.close();
 }, 9000000);
 
@@ -235,9 +265,15 @@ describe('Payment Form', () => {
   await page.click("input[id=code]");
   await page.type("input[id=code]", validCode);
   await page.click("button")
-  await page.evaluate(() => document.querySelector('button[disabled]') === null)
+  
   let error= await page.$(".error.required.field")!==null
   expect(await error).toBe(true)
+  await page.waitForTimeout(1000)
+  await page.screenshot({
+    path: "./screenshots/PaymentUnit/screenshot6.jpg",
+    type: "jpeg",
+    fullPage: true
+  });
 
   browser.close();
 }, 9000000);
@@ -276,10 +312,16 @@ describe('Payment Form', () => {
   await page.click("input[id=code]");
   await page.type("input[id=code]", invalidCode);
   await page.click("button")
-  await page.evaluate(() => document.querySelector('button[disabled]') === null)
+  
   let error= await page.$(".error.required.field")!==null
   expect(await error).toBe(true)
 
+  await page.waitForTimeout(1000)
+  await page.screenshot({
+    path: "./screenshots/PaymentUnit/screenshot7.jpg",
+    type: "jpeg",
+    fullPage: true
+  });
   browser.close();
 }, 9000000);
 });

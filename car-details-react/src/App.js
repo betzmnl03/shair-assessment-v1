@@ -21,7 +21,6 @@ function App() {
     }
     Details.index(params)
     .then((res)=>{
-      console.log(res)
       final[0]={
         "key":"0",
         "text":"All",

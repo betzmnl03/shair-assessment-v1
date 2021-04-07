@@ -148,6 +148,7 @@ const SearchBar = (props)=>{
               />
             </Form.Group>
             <Form.Button
+            name="search"
             onClick={(event)=>handleSubmit(event)} 
             >Search</Form.Button>
           </Form>
@@ -155,8 +156,8 @@ const SearchBar = (props)=>{
 
 
         </Grid>
+      {result.length>0? <div id="error">{result}</div>:""}
       
-      <div id="error">{result}</div>
       {vinDetails?
       <VinDetailsSection vinDetails={vinDetails}/>
     :""}

@@ -1,17 +1,40 @@
 const puppeteer = require('puppeteer');
-
 const validVin = "1G1AK15FX67646740"
 const invalidVin ="1G1AK15FX6764674"
 
-describe('Search Bar', () => {
+const faker = require('faker');
+const person = {
+  name: faker.name.firstName() + ' ' + faker.name.lastName(),
+};
+const validCardNum = "4242424242424242"
+const validCvv = "123"
+const validExpiry="1224"
+const validCode = "V8W4A3"
 
-  /*Test 1: Search with valid Vehicle Idenitifcation Number => Happy Path 😃 
+
+const invalidCardNum = "1242424242424242"
+const invalidCvv = "1234"
+const invalidExpiry="1219"
+const invalidCode = "V8W4A"
+
+describe('Search and Form', () => {
+
+  /*Test 1: Search for vehicle details and submit payment form => Happy Path 😃 
   inputs: 
   vin=>valid
-  
+  cardNum, card types, cvv, expiry date, postal code=> valid
+   steps: 
+   open the home page, 
+   click on search button to navigate to the section
+   enter VIN
+   expect vin section
+   click on payment button in the menu bar
+   enter all the details
+   submit form
+   expect no errors.
   */
   
-  test('Can search for VIN details with Valid VIN', async () => {
+  test('Can search for vehicle details and submit payment form', async () => {
     let browser = await puppeteer.launch({
       headless: false,
       devtools: false,
@@ -20,54 +43,65 @@ describe('Search Bar', () => {
     let page = await browser.newPage();
    
     await page.goto('http://localhost:5500');
+    await page.click("button")
     await page.waitForSelector('#search-form');
     await page.click("input[name=vin]");
     await page.type("input[name=vin]", validVin);
-    await page.click("button")
+    await page.click("button[name=search]")
     await page.waitForSelector("#vin-details");
     await page.waitForSelector("h1")
     let element = await page.$('#vin-details h1')
     let receieved = await page.evaluate(el => el.textContent, element)
     let expected = "Vin Details"
     expect(await receieved).toBe(expected)
-
-    browser.close();
-  }, 9000000);
-
-
-  /*Test 2: Search for a particular Manufacturer => Happy Path 😃 
-  manufacturer => Aston Martin
-  */
-  
-  test('Can search with valid Manufaturer name', async () => {
-    let browser = await puppeteer.launch({
-      headless: false,
-      devtools: false,
-      slowMo: 100
+    await page.evaluate(() => {
+      window.scrollBy(0, window.innerHeight);
     });
-    let page = await browser.newPage();
-   
-    await page.goto('http://localhost:5500');
-    await page.waitForSelector('#search-form');
+    await page.click("#payment-menu")
+    await page.click("input[name=name]");
+    await page.type("input[name=name]", person.name);
     await page.click('.selection, .transition')
-    await page.click('.visible.menu.transition > :nth-child(3)')
+    await page.click('.visible.menu.transition > :nth-child(3)') /*select visa which is the 3rd child*/
+    await page.click("input[id=number]");
+    await page.type("input[id=number]", validCardNum);
+    await page.click("input[id=cvv]");
+    await page.type("input[id=cvv]", validCvv);
+    await page.click("input[id=expiry]");
+    await page.type("input[id=expiry]", validExpiry);
+    await page.click("input[id=code]");
+    await page.type("input[id=code]", validCode);
     await page.click("button")
-    await page.waitForSelector("#man-details");
-    await page.waitForSelector("h1")
-    let element = await page.$('#man-details h1')
-    let receieved = await page.evaluate(el => el.textContent, element)
-    let expected = "Manufacturer Details"
-    expect(await receieved).toBe(expected)
+    let error= await page.$(".error.required.field");
+    expect(await error).toBe(null)
+
+    await page.waitForTimeout(1000)
+    await page.screenshot({
+      path: "./screenshots/EndToEnd/test1/screenshot.jpg",
+      type: "jpeg",
+      fullPage: true
+    });
     browser.close();
   }, 9000000);
 
 
 
-  /*Test 3: Search for all Manufacturers => Happy Path 😃 
-  manufacturer => all
+  /*Test 2: Search for vehicle details with invalid data and submit payment form with valid data 
+  inputs: 
+  vin=>inValid
+  cardNum => invalid
+   card types, cvv, expiry date, postal code=> valid
+   steps: 
+   open the home page, 
+   click on search button to navigate to the section
+   enter VIN
+   expect error
+   click on payment button in the menu bar
+   enter all the details
+   submit form
+   expect error.
   */
   
- test('Can search with valid Manufaturer name', async () => {
+ test('Can search for vehicle details and submit payment form', async () => {
   let browser = await puppeteer.launch({
     headless: false,
     devtools: false,
@@ -75,154 +109,54 @@ describe('Search Bar', () => {
   });
   let page = await browser.newPage();
  
-  await page.goto('http://localhost:5500');
-  await page.waitForSelector('#search-form');
-  await page.click('.selection, .transition')
-  await page.click('.visible.menu.transition > :nth-child(1)') //selecting all option
+  await page.goto('http://localhost:5500',{waitUntil: 'networkidle0'});
   await page.click("button")
-  await page.waitForSelector("#all-man-details");
-  await page.waitForSelector("h1")
-  let element = await page.$('#all-man-details h1')
-  let receieved = await page.evaluate(el => el.textContent, element)
-  let expected = "All Manufacturers"
-  expect(await receieved).toBe(expected)
-  browser.close();
-}, 9000000);
-
-
-/*Test 4: Search for all Manufacturers with valid Vin and Valid Manufacturer => Happy Path 
-  This test is to ensure that we can search for either Vin or Manufaturer only
-  steps:
-  1. enter valid vin
-  2. then select all
-  output=> should return all manufacturers 
-  */
-  
- test('Can search with valid Manufaturer after valid vin', async () => {
-  let browser = await puppeteer.launch({
-    headless: false,
-    devtools: false,
-    slowMo: 100
-  });
-  let page = await browser.newPage();
- 
-  await page.goto('http://localhost:5500');
-  await page.click("input[name=vin]");
-  await page.type("input[name=vin]", validVin);
-  await page.waitForSelector('#search-form');
-  await page.click('.selection, .transition')
-  await page.click('.visible.menu.transition > :nth-child(1)') //selecting all option
-  await page.click("button")
-  await page.waitForSelector("#all-man-details");
-  await page.waitForSelector("h1")
-  
-  let elementVin = await page.$('#vin-details h1')
-  expect(await elementVin).toBe(null) /*Vin Details section should be null*/
-
-  let element = await page.$('#all-man-details h1')
-  let receieved = await page.evaluate(el => el.textContent, element)
-  let expected = "All Manufacturers"
-  expect(await receieved).toBe(expected)
-  browser.close();
-}, 9000000);
-
-
-/*Test 5: Search for Vin Details with valid Vin and Valid Manufacturer => Happy Path 
-  This test is to ensure that we can search for either Vin or Manufaturer only
-  steps:
-  1. select a manufacturer
-  2. enter a valid vin
-  output=> should return vin details
-  */
-  
- test('Can search with valid Vin after valid manufacturer', async () => {
-  let browser = await puppeteer.launch({
-    headless: false,
-    devtools: false,
-    slowMo: 100
-  });
-  let page = await browser.newPage();
- 
-  await page.goto('http://localhost:5500');
-  await page.waitForSelector('#search-form');
-  await page.click('.selection, .transition')
-  await page.click('.visible.menu.transition > :nth-child(1)') //selecting all option
-  await page.click("input[name=vin]");
-  await page.type("input[name=vin]", validVin);
-  await page.click("button") 
-  await page.waitForSelector("#vin-details");
-  await page.waitForSelector("h1") 
-  let elementMan = await page.$('#man-details h1')
-  expect(await elementMan).toBe(null) /*Manufacturer Details section should be null*/
-  
-  let element = await page.$('#vin-details h1')
-  let receieved = await page.evaluate(el => el.textContent, element)
-  let expected = "Vin Details"
-  expect(await receieved).toBe(expected)
-
-  browser.close();
-}, 9000000);
-
-/*Test 6: Search without any input */
-  
- test('Cannot search with empty fields', async () => {
-  let browser = await puppeteer.launch({
-    headless: false,
-    devtools: false,
-    slowMo: 100
-  });
-  let page = await browser.newPage();
- 
-  await page.goto('http://localhost:5500');
-  await page.waitForSelector('#search-form');
-  await page.click("button") 
-  await page.waitForSelector("#error"); 
-  let element = await page.$('#error')
-  let receieved = await page.evaluate(el => el.textContent, element)
-  let expected = "Please enter a VIN or select Manufacturer"
-  expect(await receieved).toBe(expected)
-
-  browser.close();
-}, 9000000);
-
-
-/*Test 7: Search with invalid Vehicle Idenitifcation Number
-  vin=> invalid
-  
-  */
-  
- test('Cannot search for VIN details with inValid VIN', async () => {
-  let browser = await puppeteer.launch({
-    headless: false,
-    devtools: false,
-    slowMo: 100
-  });
-  let page = await browser.newPage();
- 
-  await page.goto('http://localhost:5500');
   await page.waitForSelector('#search-form');
   await page.click("input[name=vin]");
   await page.type("input[name=vin]", invalidVin);
-  await page.click("button")
-  await page.waitForSelector("#error"); 
+  await page.click("button[name=search]")
+  await page.waitForSelector("#error")
   let element = await page.$('#error')
   let receieved = await page.evaluate(el => el.textContent, element)
   let expected = "Not a valid VIN"
   expect(await receieved).toBe(expected)
 
-  let elementVin = await page.$('#vin-details h1')
-  expect(await elementVin).toBe(null) /*Vin Details section should be null*/
+  await page.evaluate(() => window.scrollTo(0, Number.MAX_SAFE_INTEGER))
+  // await page.evaluate(() => {
+  //   window.scrollBy(0, window.innerHeight);
+  // });
 
-  let elementallMan = await page.$('#all-man-details h1')
-  expect(await elementallMan).toBe(null) /*AllManufactrer section should be null*/
+  await page.waitForTimeout(8000)
+  await page.screenshot({
+    path: "./screenshots/EndToEnd/test2/screenshot.jpg",
+    type: "jpeg",
+    fullPage: true
+  });
+  await page.click("#payment-menu")
+  await page.click("input[name=name]");
+  await page.type("input[name=name]", person.name);
+  await page.click('.selection, .transition')
+  await page.click('.visible.menu.transition > :nth-child(3)') /*select visa which is the 3rd child*/
+  await page.click("input[id=number]");
+  await page.type("input[id=number]", invalidCardNum);
+  await page.click("input[id=cvv]");
+  await page.type("input[id=cvv]", validCvv);
+  await page.click("input[id=expiry]");
+  await page.type("input[id=expiry]", validExpiry);
+  await page.click("input[id=code]");
+  await page.type("input[id=code]", validCode);
+  await page.click("button")
+  let error= await page.$(".error.required.field")!==null
+  expect(await error).toBe(true)
 
-  let elementMan = await page.$('#man-details h1')
-  expect(await elementMan).toBe(null) /*Manufacturer Details section should be null*/
-  
-
+  await page.waitForTimeout(1000)
+  await page.screenshot({
+    path: "./screenshots/EndToEnd/test2/screenshot1.jpg",
+    type: "jpeg",
+    fullPage: true
+  });
   browser.close();
 }, 9000000);
-
 
 
 

@@ -20,7 +20,6 @@ export default function AllManDetailsSection(props) {
                 
                 {images.forEach((image)=>{
                     let name=item["Mfr_Name"]&&item["Mfr_Name"].split(" ")
-                    // console.log(name[0].toLowerCase())
                     
                    if(name[0].toLowerCase()===image["name"]){
                        src=image["src"]
