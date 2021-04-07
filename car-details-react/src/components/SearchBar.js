@@ -7,7 +7,16 @@ import AllManDetailsSection from "./AllManDetailsSection"
 import IntroSection from './IntroSection'
 import {Grid, Image} from "semantic-ui-react"
 
+/*Search Section with Two Search bar
+1. For Vin
+2. For Manufacturers
+Can only search for one parameter at a time
 
+if VIN Search is done => Will render the VIN section only
+if Manufacturer Search is done => Will render the particular Manufacturer section only
+if the User searched for all manufactueres => Will render All Manufacturer section
+if there is an error => renders the div with id=error and message = result
+*/
 const SearchBar = (props)=>{
   const [vin, setVin] = useState("")
   const [vinDetails,setVinDetails] = useState(undefined)
@@ -24,13 +33,13 @@ const SearchBar = (props)=>{
     home.classList.add("active")
  }, [])
 
-
-
+ /*Checking the pattern of the input Vin before making an API Call*/
   function validateVin(vin) {
     let re = new RegExp("^[A-HJ-NPR-Z\\d]{8}[\\dX][A-HJ-NPR-Z\\d]{2}\\d{6}$");
     return vin.match(re);
   }
 
+  /*To reset all the States */
   function reset(){
     setAllManDetails(undefined)
     setVinDetails(undefined)
@@ -78,10 +87,7 @@ const SearchBar = (props)=>{
     })
   }
   }
-
-
-
-
+/*Change Handler for Manufacturer field*/
   const handleChange =(e,{value})=>{
     if(value){
     let searched = props.manuArr.filter(obj=>{
@@ -98,21 +104,23 @@ const SearchBar = (props)=>{
   }
   }
 
+  /*VIN Change Handler*/
+  const handleVinChange=(event)=>{
+    setVin(event.target.value)
+   }
+
+  /*VIN field Click handle to clear state of manufacturer if set*/
   const handleVinClick =(event)=>{
     const clear_button = document.querySelector(".dropdown.icon.clear")
     clear_button && clear_button.click()
     setManufacturer("")
     setResult("")
   }
-  const handleManufacturerClick=()=>{
-    setVin("")
-    
-  }
 
-  const handleVinChange=(event)=>{
-   setVin(event.target.value)
+  /*Manufacturer field Click handle to clear state of VIN*/
+  const handleManufacturerClick=()=>{
+    setVin("") 
   }
-  
     return (
       
       <>
@@ -153,22 +161,20 @@ const SearchBar = (props)=>{
             >Search</Form.Button>
           </Form>
           </Grid.Row>
-
-
         </Grid>
       {result.length>0? <div id="error">{result}</div>:""}
       
       {vinDetails?
-      <VinDetailsSection vinDetails={vinDetails}/>
-    :""}
+        <VinDetailsSection vinDetails={vinDetails}/>
+      :""}
 
-    {manDetails?
-      <ManDetailsSection manDetails={manDetails}/>
-    :""}
-        {allManDetails?
-      <AllManDetailsSection allManDetails={allManDetails}/>
-    :""}
-      
+      {manDetails?
+        <ManDetailsSection manDetails={manDetails}/>
+      :""}
+      {allManDetails?
+        <AllManDetailsSection allManDetails={allManDetails}/>
+      :""}
+        
       </>
     )
 }

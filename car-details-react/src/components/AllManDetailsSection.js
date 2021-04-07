@@ -1,11 +1,9 @@
 import React from 'react'
 import { Card, Image } from 'semantic-ui-react'
 import imagesArr from "../data/cardImages"
-
-
-
 const images = imagesArr
 
+/*This component displays all manufacturers*/
 
 export default function AllManDetailsSection(props) {
     const details = props.allManDetails.Results
@@ -16,20 +14,13 @@ export default function AllManDetailsSection(props) {
              <h1>All Manufacturers</h1>
              <Card.Group centered>
             {details? details.map((item,i)=>{
-                let src=""
-                
+                let src="" 
                 {images.forEach((image)=>{
-                    let name=item["Mfr_Name"]&&item["Mfr_Name"].split(" ")
-                    
+                   let name=item["Mfr_Name"]&&item["Mfr_Name"].split(" ")
                    if(name[0].toLowerCase()===image["name"]){
-                       src=image["src"]
-                       
-                   }
+                       src=image["src"]}
                 }
-                
-                )}
-                
-                
+                )}  
                 return(
 
                       <Card key={i} style={{

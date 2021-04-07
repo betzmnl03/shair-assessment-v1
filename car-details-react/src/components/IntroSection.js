@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import {Grid, Header, Button,Icon} from "semantic-ui-react"
 
-
+/*Introduction/ Landing Page Section
+ Has 2 buttons to navigate to Search section, Payment Form*/
 export default function IntroSection(props) {
     return (
         <div id="intro">

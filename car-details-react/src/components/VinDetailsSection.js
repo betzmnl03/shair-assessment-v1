@@ -2,6 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { Card, Image } from 'semantic-ui-react'
 import images from '../data/cardImages'
 
+/*This section renders the Car Model, Year and Make for a particular VIN*/
 export default function VinDetailsPage(props) {
     const details = props.vinDetails[0]
     let src=""
