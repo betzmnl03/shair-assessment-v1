@@ -1,4 +1,4 @@
-#                                 SHAIR ASSESSEMENT
+#                                 SHAIR ASSIGNMENT
 
 Demo: https://vimeo.com/534170080    <- Click here to watch a demo of the assessment
 
